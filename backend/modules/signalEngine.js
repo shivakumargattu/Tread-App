@@ -1,13 +1,13 @@
-// backend/modules/signalEngine.js
 const { fetchNews } = require('./newsFetcher');
 const { analyzeSentiment } = require('./sentimentAnalyzer');
 const { getTechnicalIndicators } = require('./technicals');
+const { fetchStockPrice } = require('./priceFetcher');
 
 async function generateSignal(symbol) {
   const headlines = await fetchNews(symbol);
   if (!headlines || headlines.length === 0) return null;
 
-  // Sentiment: analyze each headline
+  // Sentiment
   const sentiments = headlines.map(h => analyzeSentiment(h).score);
   const avgSentiment = sentiments.reduce((a, b) => a + b, 0) / sentiments.length;
 
@@ -15,7 +15,12 @@ async function generateSignal(symbol) {
   const tech = await getTechnicalIndicators(symbol);
   if (!tech) return null;
 
-  // Logic
+  // Chart Data (✅ This was missing)
+  const priceData = await fetchStockPrice(symbol);
+  if (!priceData || !priceData.chartData) return null;
+  const { chartData } = priceData;
+
+  // Signal Logic
   let signal = "Hold";
   let reason = "";
 
@@ -43,6 +48,7 @@ async function generateSignal(symbol) {
     ema20: tech.ema20,
     macd: tech.macd,
     headlines,
+    chartData, // ✅ Now it’s correctly fetched and returned
   };
 }
 

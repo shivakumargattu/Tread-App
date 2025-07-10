@@ -21,19 +21,26 @@ async function fetchStockPrice(symbol) {
     console.log(`➡️ ${symbol} fetched:`);
     console.log(`Timestamps: ${timestamps?.length}, Prices: ${prices?.length}`);
 
+  
+
     let chartData = [];
 
-    if (timestamps && prices) {
-      chartData = timestamps.map((ts, index) => {
-        const date = new Date(ts * 1000);
-        const hours = date.getHours().toString().padStart(2, "0");
-        const minutes = date.getMinutes().toString().padStart(2, "0");
-        return {
-          time: `${hours}:${minutes}`,
-          price: prices[index],
-        };
-      }).filter((d) => d.price !== null);
-    } else {
+if (timestamps && prices) {
+  chartData = timestamps.map((ts, index) => {
+    const date = new Date(ts * 1000);
+    return {
+      time: date.toLocaleString("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+        day: "2-digit",
+        month: "short",
+      }),
+      price: prices[index],
+    };
+  }).filter((d) => d.price !== null);
+}
+ else {
       console.warn(`⚠️ No chart data for ${symbol}`);
     }
 
