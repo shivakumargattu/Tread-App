@@ -1,7 +1,25 @@
 import React from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 function StockCard({ stock }) {
-  const { symbol, signal, reason, rsi, ema5, ema20, sentimentScore, headlines } = stock;
+  const {
+    symbol,
+    signal,
+    reason,
+    rsi,
+    ema5,
+    ema20,
+    sentimentScore,
+    headlines,
+    chartData,
+  } = stock;
 
   const signalStyles = {
     Buy: "bg-green-100 text-green-700 border-green-300 dark:bg-green-900 dark:text-green-300 dark:border-green-600",
@@ -10,10 +28,12 @@ function StockCard({ stock }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-5 hover:shadow-lg transition-all min-h-[320px] flex flex-col justify-between">
+    <div className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-5 hover:shadow-lg transition-all min-h-[350px] flex flex-col justify-between">
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-lg md:text-xl font-semibold">{symbol}</h2>
-        <span className={`px-3 py-1 rounded-full text-sm font-semibold border ${signalStyles[signal]}`}>
+        <span
+          className={`px-3 py-1 rounded-full text-sm font-semibold border ${signalStyles[signal]}`}
+        >
           {signal}
         </span>
       </div>
@@ -26,6 +46,28 @@ function StockCard({ stock }) {
         <p>📉 EMA-20: ₹<strong>{ema20}</strong></p>
         <p>💬 Sentiment: <strong>{sentimentScore}</strong></p>
       </div>
+
+      {chartData && chartData.length > 0 && (
+        <div className="h-32 my-4">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={chartData}>
+              <Line
+                type="monotone"
+                dataKey="price"
+                stroke="#3b82f6"
+                strokeWidth={2}
+                dot={false}
+              />
+              <XAxis dataKey="time" hide />
+              <YAxis domain={["auto", "auto"]} hide />
+              <Tooltip
+                contentStyle={{ backgroundColor: "#1f2937", border: "none" }}
+                labelStyle={{ color: "#d1d5db" }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      )}
 
       <div>
         <p className="font-semibold mb-1">📰 Top News:</p>
