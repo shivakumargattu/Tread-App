@@ -21,6 +21,20 @@ app.get("/api/signals", async (req, res) => {
   }
 });
 
+// backend/server.js
+const { fetchIndexData } = require("./modules/fetchIndexData");
+
+app.get("/api/indices", async (req, res) => {
+  const symbols = ["^NSEI", "^BSESN", "^NSEBANK"];
+  try {
+    const data = await Promise.all(symbols.map(fetchIndexData));
+    res.json(data.filter(Boolean));
+  } catch (e) {
+    res.status(500).json({ error: "Failed to fetch index data" });
+  }
+});
+
+
 app.get("/api/chartdata", async (req, res) => {
   try {
     const { symbol, range = "1d", interval = "5m" } = req.query;

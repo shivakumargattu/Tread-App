@@ -22,6 +22,7 @@ function StockCard({ stock }) {
   } = stock;
 
   const [chartData, setChartData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [range, setRange] = useState("1d");
   const [interval, setInterval] = useState("5m");
 
@@ -34,26 +35,28 @@ function StockCard({ stock }) {
   useEffect(() => {
     const fetchChartData = async () => {
       try {
+        setLoading(true);
         const res = await axios.get(
           `http://localhost:5000/api/chartdata?symbol=${symbol}&range=${range}&interval=${interval}`
         );
         const rawData = Array.isArray(res.data)
-  ? res.data
-  : res.data.chartData || [];
+          ? res.data
+          : res.data.chartData || [];
 
-const formatted = rawData.map((point) => ({
-  ...point,
-  timeLabel: new Date(point.time).toLocaleTimeString("en-IN", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  }),
-}));
-setChartData(formatted);
-
+        const formatted = rawData.map((point) => ({
+          ...point,
+          timeLabel: new Date(point.time).toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          }),
+        }));
+        setChartData(formatted);
       } catch (err) {
-        console.error("Chart fetch error:", err.message);
+        console.error(`❌ Chart fetch error for ${symbol}:`, err.message);
         setChartData([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -64,9 +67,7 @@ setChartData(formatted);
     <div className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-5 hover:shadow-lg transition-all min-h-[350px] flex flex-col justify-between">
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-lg md:text-xl font-semibold">{symbol}</h2>
-        <span
-          className={`px-3 py-1 rounded-full text-sm font-semibold border ${signalStyles[signal]}`}
-        >
+        <span className={`px-3 py-1 rounded-full text-sm font-semibold border ${signalStyles[signal]}`}>
           {signal}
         </span>
       </div>
@@ -80,7 +81,7 @@ setChartData(formatted);
         <p>💬 Sentiment: <strong>{sentimentScore}</strong></p>
       </div>
 
-      {/* 🔽 Dropdowns for Range and Interval */}
+      {/* 🔽 Range & Interval Dropdowns */}
       <div className="flex flex-wrap items-center gap-2 text-sm mb-4">
         <label>
           ⏳ Range:
@@ -111,9 +112,11 @@ setChartData(formatted);
         </label>
       </div>
 
-      {/* 📉 Chart */}
-      {chartData.length > 0 && (
-        <div className="h-32 my-4">
+      {/* 📉 Mini Chart */}
+      <div className="h-32 my-4">
+        {loading ? (
+          <p className="text-sm italic text-center text-gray-400">⏳ Loading chart...</p>
+        ) : chartData.length > 0 ? (
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <Line
@@ -133,8 +136,10 @@ setChartData(formatted);
               />
             </LineChart>
           </ResponsiveContainer>
-        </div>
-      )}
+        ) : (
+          <p className="text-sm italic text-center text-red-400">⚠️ No chart data</p>
+        )}
+      </div>
 
       <div>
         <p className="font-semibold mb-1">📰 Top News:</p>

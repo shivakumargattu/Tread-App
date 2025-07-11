@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from "react";
 import SignalList from "./components/SignalList";
 import ThemeToggle from "./components/ThemeToggle";
+import IndexTracker from "./components/IndexTracker/IndexTracker";
+
+
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -22,6 +25,7 @@ function App() {
           </h1>
           <ThemeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
         </div>
+          <IndexTracker/>
         <SignalList />
       </div>
     </div>
