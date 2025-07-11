@@ -9,14 +9,14 @@ async function generateSignal(symbol) {
   if (!headlines || headlines.length === 0) return null;
 
   const scores = headlines.map(h => analyzeSentiment(h).score);
-  const avgSentiment = scores.reduce((a, b) => a + b) / scores.length;
+  const avgSentiment = scores.reduce((a, b) => a + b, 0) / scores.length;
 
   const tech = await getTechnicalIndicators(symbol);
   if (!tech) return null;
 
-  let signal = "Hold", reason = "No strong signal";
-  const ema5 = parseFloat(tech.ema5), ema20 = parseFloat(tech.ema20);
+  const { ema5, ema20, rsi, macd } = tech;
 
+  let signal = "Hold", reason = "No strong signal";
   if (avgSentiment > 0.4 && ema5 > ema20) {
     signal = "Buy";
     reason = "Positive news + EMA crossover";
@@ -25,20 +25,28 @@ async function generateSignal(symbol) {
     reason = "Negative news + EMA crossover";
   }
 
-  const chartData = await fetchStockPrice(symbol, "1d", "5m");
+  // 🟢 Get chart and current price
+  const { chartData, currentPrice } = await fetchStockPrice(symbol, "1d", "5m");
+  if (!chartData || !currentPrice) return null;
+
+  // 🎯 Calculate 5% target above current price
+  const targetPrice = parseFloat((currentPrice * 1.05).toFixed(2));
 
   return {
     symbol,
     signal,
     reason,
     sentimentScore: avgSentiment.toFixed(2),
-    rsi: tech.rsi,
-    ema5: tech.ema5,
-    ema20: tech.ema20,
-    macd: tech.macd,
+    rsi,
+    ema5,
+    ema20,
+    macd,
     headlines,
     chartData,
+    currentPrice: currentPrice.toFixed(2),
+    targetPrice,
   };
 }
 
 module.exports = { generateSignal };
+  

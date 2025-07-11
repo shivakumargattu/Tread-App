@@ -18,7 +18,9 @@ function StockCard({ stock }) {
     ema5,
     ema20,
     sentimentScore,
-    headlines,
+    headlines = [],
+    targetPrice,
+    currentPrice,
   } = stock;
 
   const [chartData, setChartData] = useState([]);
@@ -51,6 +53,7 @@ function StockCard({ stock }) {
             hour12: true,
           }),
         }));
+
         setChartData(formatted);
       } catch (err) {
         console.error(`❌ Chart fetch error for ${symbol}:`, err.message);
@@ -65,15 +68,26 @@ function StockCard({ stock }) {
 
   return (
     <div className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-5 hover:shadow-lg transition-all min-h-[350px] flex flex-col justify-between">
-      <div className="flex justify-between items-center mb-3">
+      
+      {/* Header */}
+      <div className="flex justify-between items-center mb-1">
         <h2 className="text-lg md:text-xl font-semibold">{symbol}</h2>
         <span className={`px-3 py-1 rounded-full text-sm font-semibold border ${signalStyles[signal]}`}>
           {signal}
         </span>
       </div>
 
+      {/* Current & Target Price */}
+      {(currentPrice || targetPrice) && (
+        <div className="text-sm mb-3 text-gray-600 dark:text-gray-300">
+          💹 <strong>Price:</strong> ₹{currentPrice || "?"} → 🎯 <strong>Target:</strong> ₹{targetPrice || "?"}
+        </div>
+      )}
+
+      {/* Reason */}
       <p className="text-xs sm:text-sm italic mb-4">🧠 {reason}</p>
 
+      {/* Technical Details */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 text-sm mb-4">
         <p>📊 RSI: <strong>{rsi}</strong></p>
         <p>📈 EMA-5: ₹<strong>{ema5}</strong></p>
@@ -81,7 +95,7 @@ function StockCard({ stock }) {
         <p>💬 Sentiment: <strong>{sentimentScore}</strong></p>
       </div>
 
-      {/* 🔽 Range & Interval Dropdowns */}
+      {/* Dropdowns */}
       <div className="flex flex-wrap items-center gap-2 text-sm mb-4">
         <label>
           ⏳ Range:
@@ -112,7 +126,7 @@ function StockCard({ stock }) {
         </label>
       </div>
 
-      {/* 📉 Mini Chart */}
+      {/* Mini Chart */}
       <div className="h-32 my-4">
         {loading ? (
           <p className="text-sm italic text-center text-gray-400">⏳ Loading chart...</p>
@@ -141,6 +155,7 @@ function StockCard({ stock }) {
         )}
       </div>
 
+      {/* Headlines */}
       <div>
         <p className="font-semibold mb-1">📰 Top News:</p>
         <ul className="list-disc list-inside text-sm space-y-1">

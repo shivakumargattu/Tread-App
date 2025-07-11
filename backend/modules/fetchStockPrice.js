@@ -16,8 +16,8 @@ async function fetchStockPrice(symbol, range = "1d", interval = "5m", detailed =
 
     const { timestamp: timestamps, indicators, meta } = result;
     const prices = indicators?.quote?.[0]?.close;
-    if (!timestamps || !prices) {
-      console.warn(`⚠️ No chart data for ${symbol}`);
+    if (!timestamps || !prices || !meta) {
+      console.warn(`⚠️ Incomplete chart data for ${symbol}`);
       return null;
     }
 
@@ -30,14 +30,14 @@ async function fetchStockPrice(symbol, range = "1d", interval = "5m", detailed =
             day: "2-digit",
             month: "short",
           })
-        : ts * 1000, // raw time for sparkline
+        : ts * 1000, // UNIX timestamp in ms for sparkline
       price: prices[i],
     })).filter(item => item.price !== null);
 
-    if (detailed) {
-      const lastClose = meta.previousClose;
-      const currentPrice = meta.regularMarketPrice;
+    const currentPrice = meta.regularMarketPrice;
+    const lastClose = meta.previousClose;
 
+    if (detailed) {
       return {
         symbol,
         lastClose,
@@ -46,7 +46,10 @@ async function fetchStockPrice(symbol, range = "1d", interval = "5m", detailed =
         chartData,
       };
     } else {
-      return { chartData };
+      return {
+        chartData,
+        currentPrice,
+      };
     }
 
   } catch (err) {
@@ -56,3 +59,4 @@ async function fetchStockPrice(symbol, range = "1d", interval = "5m", detailed =
 }
 
 module.exports = { fetchStockPrice };
+    
