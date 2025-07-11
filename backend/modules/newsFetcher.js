@@ -1,7 +1,10 @@
 // backend/modules/newsFetcher.js
 const axios = require("axios");
 
+<<<<<<< HEAD
 // 📰 Fetch top 5 news headlines for a stock
+=======
+>>>>>>> 8473e5219ee93fb22025729de8898db29731a915
 async function fetchNews(stockName) {
   try {
     const response = await axios.get(
@@ -15,11 +18,16 @@ async function fetchNews(stockName) {
 
     return headlines.slice(0, 5); // return top 5 headlines
   } catch (error) {
+<<<<<<< HEAD
     console.error("❌ News fetch error:", error.message);
+=======
+    console.error("News fetch error:", error.message);
+>>>>>>> 8473e5219ee93fb22025729de8898db29731a915
     return [];
   }
 }
 
+<<<<<<< HEAD
 // 🔥 Fetch trending Indian stocks from Yahoo Finance
 async function getTrendingStocks(limit = 10) {
   const url = `https://query1.finance.yahoo.com/v1/finance/trending/IN`;
@@ -41,3 +49,6 @@ async function getTrendingStocks(limit = 10) {
 }
 
 module.exports = { fetchNews, getTrendingStocks };
+=======
+module.exports = { fetchNews };
+>>>>>>> 8473e5219ee93fb22025729de8898db29731a915

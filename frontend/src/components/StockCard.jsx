@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
+=======
+import React from "react";
+>>>>>>> 8473e5219ee93fb22025729de8898db29731a915
 import {
   LineChart,
   Line,
@@ -7,7 +11,10 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+<<<<<<< HEAD
 import axios from "axios";
+=======
+>>>>>>> 8473e5219ee93fb22025729de8898db29731a915
 
 function StockCard({ stock }) {
   const {
@@ -18,6 +25,7 @@ function StockCard({ stock }) {
     ema5,
     ema20,
     sentimentScore,
+<<<<<<< HEAD
     headlines = [],
     targetPrice,
     currentPrice,
@@ -28,12 +36,19 @@ function StockCard({ stock }) {
   const [range, setRange] = useState("1d");
   const [interval, setInterval] = useState("5m");
 
+=======
+    headlines,
+    chartData,
+  } = stock;
+
+>>>>>>> 8473e5219ee93fb22025729de8898db29731a915
   const signalStyles = {
     Buy: "bg-green-100 text-green-700 border-green-300 dark:bg-green-900 dark:text-green-300 dark:border-green-600",
     Sell: "bg-red-100 text-red-700 border-red-300 dark:bg-red-900 dark:text-red-300 dark:border-red-600",
     Hold: "bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-700 dark:text-yellow-100 dark:border-yellow-500",
   };
 
+<<<<<<< HEAD
   useEffect(() => {
     const fetchChartData = async () => {
       try {
@@ -73,10 +88,20 @@ function StockCard({ stock }) {
       <div className="flex justify-between items-center mb-1">
         <h2 className="text-lg md:text-xl font-semibold">{symbol}</h2>
         <span className={`px-3 py-1 rounded-full text-sm font-semibold border ${signalStyles[signal]}`}>
+=======
+  return (
+    <div className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-5 hover:shadow-lg transition-all min-h-[350px] flex flex-col justify-between">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-lg md:text-xl font-semibold">{symbol}</h2>
+        <span
+          className={`px-3 py-1 rounded-full text-sm font-semibold border ${signalStyles[signal]}`}
+        >
+>>>>>>> 8473e5219ee93fb22025729de8898db29731a915
           {signal}
         </span>
       </div>
 
+<<<<<<< HEAD
       {/* Current & Target Price */}
       {(currentPrice || targetPrice) && (
         <div className="text-sm mb-3 text-gray-600 dark:text-gray-300">
@@ -88,6 +113,10 @@ function StockCard({ stock }) {
       <p className="text-xs sm:text-sm italic mb-4">🧠 {reason}</p>
 
       {/* Technical Details */}
+=======
+      <p className="text-xs sm:text-sm italic mb-4">🧠 {reason}</p>
+
+>>>>>>> 8473e5219ee93fb22025729de8898db29731a915
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 text-sm mb-4">
         <p>📊 RSI: <strong>{rsi}</strong></p>
         <p>📈 EMA-5: ₹<strong>{ema5}</strong></p>
@@ -95,6 +124,7 @@ function StockCard({ stock }) {
         <p>💬 Sentiment: <strong>{sentimentScore}</strong></p>
       </div>
 
+<<<<<<< HEAD
       {/* Dropdowns */}
       <div className="flex flex-wrap items-center gap-2 text-sm mb-4">
         <label>
@@ -131,6 +161,10 @@ function StockCard({ stock }) {
         {loading ? (
           <p className="text-sm italic text-center text-gray-400">⏳ Loading chart...</p>
         ) : chartData.length > 0 ? (
+=======
+      {chartData && chartData.length > 0 && (
+        <div className="h-32 my-4">
+>>>>>>> 8473e5219ee93fb22025729de8898db29731a915
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <Line
@@ -140,22 +174,34 @@ function StockCard({ stock }) {
                 strokeWidth={2}
                 dot={false}
               />
+<<<<<<< HEAD
               <XAxis dataKey="timeLabel" tick={{ fontSize: 10 }} />
               <YAxis domain={["auto", "auto"]} tick={{ fontSize: 10 }} />
               <Tooltip
                 labelFormatter={(label) => `🕒 ${label}`}
                 formatter={(value) => [`₹${value?.toFixed(2)}`, "Price"]}
+=======
+              <XAxis dataKey="time" hide />
+              <YAxis domain={["auto", "auto"]} hide />
+              <Tooltip
+>>>>>>> 8473e5219ee93fb22025729de8898db29731a915
                 contentStyle={{ backgroundColor: "#1f2937", border: "none" }}
                 labelStyle={{ color: "#d1d5db" }}
               />
             </LineChart>
           </ResponsiveContainer>
+<<<<<<< HEAD
         ) : (
           <p className="text-sm italic text-center text-red-400">⚠️ No chart data</p>
         )}
       </div>
 
       {/* Headlines */}
+=======
+        </div>
+      )}
+
+>>>>>>> 8473e5219ee93fb22025729de8898db29731a915
       <div>
         <p className="font-semibold mb-1">📰 Top News:</p>
         <ul className="list-disc list-inside text-sm space-y-1">
