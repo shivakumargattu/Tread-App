@@ -13,7 +13,7 @@ function SignalList() {
     const fetchSignals = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:5000/api/signals");
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE}/api/signals`);
         setSignals(res.data);
         setFiltered(res.data);
         setLoading(false);
