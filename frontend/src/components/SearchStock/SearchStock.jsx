@@ -20,7 +20,7 @@ function SearchStock() {
 
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/stock?symbol=${symbol}`
+        `${process.env.REACT_APP_API_BASE}/api/stock?symbol=${symbol}`
       );
       setStock(res.data);
     } catch (err) {
