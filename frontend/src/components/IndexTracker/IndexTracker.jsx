@@ -14,7 +14,7 @@ function IndexTracker() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/indices");
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE}/api/indices`);
         setIndices(res.data);
       } catch (err) {
         console.error("Failed to fetch index data:", err.message);
