@@ -39,7 +39,7 @@ function StockCard({ stock }) {
       try {
         setLoading(true);
         const res = await axios.get(
-          `http://localhost:5000/api/chartdata?symbol=${symbol}&range=${range}&interval=${interval}`
+          `${process.env.REACT_APP_API_BASE}/api/chartdata?symbol=${symbol}&range=${range}&interval=${interval}`
         );
         const rawData = Array.isArray(res.data)
           ? res.data
